@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Potalk";
+}
+
+@model Potalk.Models.LoginModel
+
+@using (Html.BeginForm("Main", "Home"))
+{
+    <span>Username:</span>
+    <br />
+    @Html.TextBoxFor(model => model.Username, new { @required = "required" })
+    <br/>
+    <br />
+    <input id="reader" type="submit" value="Log in as a Reader" />
+    <input id="writer" type="submit" value="Log in as a Writer" />
+}
