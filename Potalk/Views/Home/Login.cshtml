@@ -9,8 +9,11 @@
     <span>Username:</span>
     <br />
     @Html.TextBoxFor(model => model.Username, new { @required = "required" })
+    <br />
+    <br />
+    @Html.CheckBoxFor(model => model.ReadOnly)
+    <span>Read only</span>
     <br/>
     <br />
-    <input id="reader" type="submit" value="Log in as a Reader" />
-    <input id="writer" type="submit" value="Log in as a Writer" />
+    <input id="reader" type="submit" value="Log in" />
 }
