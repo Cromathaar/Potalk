@@ -1,20 +1,12 @@
 ﻿using Potalk.Helpers;
-using Potalk.Models;
 using PubnubApi;
 using System;
-using System.Web.Mvc;
 
-namespace Potalk.Controllers
+namespace Potalk
 {
-    public class HomeController : Controller
+    public class PubNubConfig
     {
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Main(LoginModel loginModel)
+        public static void RegisterChannelAccess()
         {
             PNConfiguration pnConfiguration = new PNConfiguration();
             pnConfiguration.PublishKey = ConfigurationHelper.PubNubPublishKey;
@@ -24,24 +16,11 @@ namespace Potalk.Controllers
 
             Pubnub pubnub = new Pubnub(pnConfiguration);
 
-            String authKey = loginModel.Username + DateTime.Now.Ticks.ToString();
-
             pubnub.Grant()
                 .Channels(new String[] { "chat" })
-                .AuthKeys(new String[] { authKey})
-                .Read(true)
-                .Write(!loginModel.ReadOnly)
+                .Read(false)
+                .Write(false)
                 .Async(new DemoGrantResult());
-
-            var authModel = new AuthModel()
-            {
-                PublishKey = ConfigurationHelper.PubNubPublishKey,
-                SubscribeKey = ConfigurationHelper.PubNubSubscribeKey,
-                AuthKey = authKey,
-                Username = loginModel.Username
-            };
-
-            return View(authModel);
         }
 
         public class DemoGrantResult : PNCallback<PNAccessManagerGrantResult>

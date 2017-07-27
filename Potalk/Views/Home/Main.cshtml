@@ -12,13 +12,11 @@
 <input id="send" type="button" value="Send" />
 
 <script>
-
-    init(@Html.Raw(Json.Encode(Model.PublishKey)), @Html.Raw(Json.Encode(Model.SubscribeKey)), @Html.Raw(Json.Encode(Model.AuthKey)));
-    addListener();
-    subscribe();
-
     document.getElementById("send").addEventListener("click", function () {
         publish(document.getElementById("message").value);
         document.getElementById("message").value = "";
     });
+
+    initPubNub(@Html.Raw(Json.Encode(Model.PublishKey)), @Html.Raw(Json.Encode(Model.SubscribeKey)), @Html.Raw(Json.Encode(Model.AuthKey)),
+    @Html.Raw(Json.Encode(Model.Username)));
 </script>
