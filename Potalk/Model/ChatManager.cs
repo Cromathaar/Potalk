@@ -6,6 +6,8 @@ namespace Potalk.Model
 {
     public class ChatManager
     {
+        private const String PRESENCE_CHANNEL_SUFFIX = "-pnpres";
+
         private Pubnub pubnub;
 
         public ChatManager()
@@ -31,7 +33,7 @@ namespace Potalk.Model
         public void GrantUserReadAccessToChannel(String userAuthKey, String channel)
         {
             pubnub.Grant()
-                .Channels(new String[] { channel })
+                .Channels(new String[] { channel, channel + PRESENCE_CHANNEL_SUFFIX })
                 .AuthKeys(new String[] { userAuthKey })
                 .Read(true)
                 .Write(false)
@@ -41,7 +43,7 @@ namespace Potalk.Model
         public void GrantUserReadWriteAccessToChannel(String userAuthKey, String channel)
         {
             pubnub.Grant()
-                .Channels(new String[] { channel })
+                .Channels(new String[] { channel, channel + PRESENCE_CHANNEL_SUFFIX })
                 .AuthKeys(new String[] { userAuthKey })
                 .Read(true)
                 .Write(true)

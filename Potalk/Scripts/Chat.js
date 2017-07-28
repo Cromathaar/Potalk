@@ -1,15 +1,16 @@
 ﻿var pubnub;
 var channel = "chat";
-var nickname;
+var username;
 
 function init(publishKey, subscribeKey, authKey, username) {
     pubnub = new PubNub({
         publishKey: publishKey,
         subscribeKey: subscribeKey,
-        authKey: authKey
+        authKey: authKey,
+        uuid: username
     });
 
-    nickname = username;
+    this.username = username;
 
     addListener();
     subscribe();
@@ -19,37 +20,59 @@ function addListener() {
     pubnub.addListener({
         status: function (statusEvent) {
             if (statusEvent.category === "PNConnectedCategory") {
-                publishService(nickname + " joins the channel");
+                getOnlineUsers();
             }
         },
         message: function (message) {
             var jsonMessage = JSON.parse(message.message);
             var chat = document.getElementById("chat");
-
-            if (jsonMessage.IsService) {
-                chat.value = chat.value + "\n" + jsonMessage.Message;
-            }
-            else {
-                chat.value = chat.value + "\n" + jsonMessage.Nickname + ": " + jsonMessage.Message;
-            }
+            chat.value = chat.value + "\n" + jsonMessage.Username + ": " + jsonMessage.Message;
         },
         presence: function (presenceEvent) {
-            // handle presence
+            if (presenceEvent.action === 'join') {
+                PutStatusToChat(presenceEvent.uuid, "joins the channel");
+            }
+            else if (presenceEvent.action === 'leave') {
+                PutStatusToChat(presenceEvent.uuid, "left the channel");
+            }
+            else if (presenceEvent.action === 'timeout') {
+                PutStatusToChat(presenceEvent.uuid, "was disconnected due to timeout");
+            }
         }
     });
 }
 
+function PutStatusToChat(username, status) {
+    var chat = document.getElementById("chat");
+    chat.value = chat.value + "\n" + username + " " + status;
+}
+
 function subscribe() {
     pubnub.subscribe({
-        channels: [channel]
+        channels: [channel],
+        withPresence: true
     });
+}
+
+function getOnlineUsers() {
+    pubnub.hereNow({
+        channels: [channel],
+        includeUUIDs: true,
+        includeState: false
+    },
+        function (status, response) {
+            var occupants = response.channels[channel].occupants;
+            for (var i = 0; i < occupants.length; i++) {
+                var users = document.getElementById("users");
+                users.value = users.value + "\n" + occupants[i].uuid;
+            }
+        });
 }
 
 function publish(message) {
     var jsonMessage = {
-        "Nickname": nickname,
-        "Message": message,
-        "IsService": false
+        "Username": username,
+        "Message": message
     };
 
     var publishConfig = {
@@ -57,24 +80,5 @@ function publish(message) {
         message: JSON.stringify(jsonMessage)
     };
 
-    pubnub.publish(publishConfig, function (status, response) {
-        console.log(status, response);
-    });
-}
-
-function publishService(message) {
-    var jsonMessage = {
-        "Nickname": nickname,
-        "Message": message,
-        "IsService": true
-    };
-
-    var publishConfig = {
-        channel: channel,
-        message: JSON.stringify(jsonMessage)
-    };
-
-    pubnub.publish(publishConfig, function (status, response) {
-        console.log(status, response);
-    });
+    pubnub.publish(publishConfig);
 }
