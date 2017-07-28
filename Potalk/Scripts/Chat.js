@@ -2,7 +2,7 @@
 var channel = "chat";
 var nickname;
 
-function initPubNub(publishKey, subscribeKey, authKey, username) {
+function init(publishKey, subscribeKey, authKey, username) {
     pubnub = new PubNub({
         publishKey: publishKey,
         subscribeKey: subscribeKey,
