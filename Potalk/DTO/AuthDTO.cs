@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Potalk.Models
+namespace Potalk.DTO
 {
-    public class AuthModel
+    public class AuthDTO
     {
         public String PublishKey { get; set; }
         public String SubscribeKey { get; set; }

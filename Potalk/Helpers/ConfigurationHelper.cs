@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 
 namespace Potalk.Helpers
 {
@@ -19,6 +20,12 @@ namespace Potalk.Helpers
         public static String PubNubSecretKey {
             get {
                 return Environment.GetEnvironmentVariable("PubNubSecretKey");
+            }
+        }
+
+        public static String ChatChannelName {
+            get {
+                return ConfigurationManager.AppSettings["ChatChannelName"];
             }
         }
     }

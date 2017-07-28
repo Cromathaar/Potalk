@@ -2,7 +2,7 @@
     ViewBag.Title = "Potalk";
 }
 
-@model Potalk.Models.LoginModel
+@model Potalk.DTO.LoginDTO
 
 @using (Html.BeginForm("Main", "Home"))
 {
@@ -11,7 +11,7 @@
     @Html.TextBoxFor(model => model.Username, new { @required = "required" })
     <br />
     <br />
-    @Html.CheckBoxFor(model => model.ReadOnly)
+    @Html.CheckBoxFor(model => model.ReadAccessOnly)
     <span>Read only</span>
     <br/>
     <br />
