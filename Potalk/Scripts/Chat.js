@@ -60,8 +60,10 @@ function getOnlineUsers() {
         function (status, response) {
             var occupants = response.channels[channel].occupants;
             for (var i = 0; i < occupants.length; i++) {
-                var users = document.getElementById("users");
-                users.value = users.value + "\n" + occupants[i].uuid;
+                var chatusers = document.getElementById("chatusers");
+                var option = document.createElement("option");
+                option.text = occupants[i].uuid;
+                chatusers.add(option);
             }
         });
 }
