@@ -32,9 +32,6 @@ function addListener() {
             if (presenceEvent.action === 'join') {
                 PutStatusToChat(presenceEvent.uuid, "joins the channel");
             }
-            else if (presenceEvent.action === 'leave') {
-                PutStatusToChat(presenceEvent.uuid, "left the channel");
-            }
             else if (presenceEvent.action === 'timeout') {
                 PutStatusToChat(presenceEvent.uuid, "was disconnected due to timeout");
             }
