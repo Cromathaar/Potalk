@@ -17,8 +17,17 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
+input
+{
     max-width: 280px;
+}
+
+#chat {
+    width: 80%;
+    height: 300px;
+}
+
+#chatusers {
+    width: 15%;
+    height: 300px;
 }

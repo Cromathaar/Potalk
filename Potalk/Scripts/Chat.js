@@ -26,28 +26,28 @@ function addListener() {
         message: function (message) {
             var jsonMessage = JSON.parse(message.message);
             var chat = document.getElementById("chat");
-            chat.value = chat.value + "\n" + jsonMessage.Username + ": " + jsonMessage.Message;
+            if (chat.value !== "") {
+                chat.value = chat.value + "\n";
+            }
+
+            chat.value = chat.value + jsonMessage.Username + ": " + jsonMessage.Message;
         },
         presence: function (presenceEvent) {
             if (presenceEvent.action === 'join') {
+                if (!UserIsOnTheList(presenceEvent.uuid)) {
+                    AddUserToList(presenceEvent.uuid);
+                }
+
                 PutStatusToChat(presenceEvent.uuid, "joins the channel");
             }
             else if (presenceEvent.action === 'timeout') {
+                if (UserIsOnTheList(presenceEvent.uuid)) {
+                    RemoveUserFromList(presenceEvent.uuid);
+                }
+
                 PutStatusToChat(presenceEvent.uuid, "was disconnected due to timeout");
             }
         }
-    });
-}
-
-function PutStatusToChat(username, status) {
-    var chat = document.getElementById("chat");
-    chat.value = chat.value + "\n" + username + " " + status;
-}
-
-function subscribe() {
-    pubnub.subscribe({
-        channels: [channel],
-        withPresence: true
     });
 }
 
@@ -60,12 +60,52 @@ function getOnlineUsers() {
         function (status, response) {
             var occupants = response.channels[channel].occupants;
             for (var i = 0; i < occupants.length; i++) {
-                var chatusers = document.getElementById("chatusers");
-                var option = document.createElement("option");
-                option.text = occupants[i].uuid;
-                chatusers.add(option);
+                if (!UserIsOnTheList(occupants[i].uuid)) {
+                    AddUserToList(occupants[i].uuid);
+                }
             }
         });
+}
+
+function UserIsOnTheList(username) {
+    var userFound = false;
+
+    for (i = 0; i < document.getElementById("chatusers").length; ++i) {
+        if (document.getElementById("chatusers").options[i].value === username) {
+            userFound = true;
+            break;
+        }
+    }
+
+    return userFound;
+}
+
+function RemoveUserFromList(username) {
+    var chatusers = document.getElementById("chatusers");
+
+    for (var i = 0; i < chatusers.length; i++) {
+        if (chatusers.options[i].value === username)
+            chatusers.remove(i);
+    }
+}
+
+function AddUserToList(username) {
+    var chatusers = document.getElementById("chatusers");
+    var option = document.createElement("option");
+    option.text = username;
+    chatusers.add(option);
+}
+
+function PutStatusToChat(username, status) {
+    var chat = document.getElementById("chat");
+    chat.value = chat.value + "\n" + username + " " + status;
+}
+
+function subscribe() {
+    pubnub.subscribe({
+        channels: [channel],
+        withPresence: true
+    });
 }
 
 function publish(message) {

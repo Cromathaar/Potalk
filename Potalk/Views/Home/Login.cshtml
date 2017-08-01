@@ -6,14 +6,17 @@
 
 @using (Html.BeginForm("Main", "Home"))
 {
-    <span>Username:</span>
-    <br />
-    @Html.TextBoxFor(model => model.Username, new { @required = "required" })
-    <br />
-    <br />
-    @Html.CheckBoxFor(model => model.ReadAccessOnly)
-    <span>Read only</span>
-    <br/>
-    <br />
-    <input id="reader" type="submit" value="Log in" />
+    <div class="form-group">
+        <label for="username">Username</label>
+        <br />
+        @Html.TextBoxFor(model => model.Username, new { @id = "username", @required = "required", @class = "form-control" })
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(model => model.ReadAccessOnly) Read only
+        </label>
+    </div>
+    <div class="form-group">
+        <input id="reader" type="submit" class="btn btn-default" value="Log in" />
+    </div>
 }
