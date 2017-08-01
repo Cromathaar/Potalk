@@ -33,6 +33,11 @@ input
 }
 
 #message {
-    width: 90%;
+    width: 82%;
     max-width: 90%;
+}
+
+#icon_select {
+    float: right;
+    padding-right: 11%;
 }

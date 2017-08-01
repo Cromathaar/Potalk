@@ -12,8 +12,10 @@
 <br>
 <div class="form-inline">
     <input id="message" type="text" class="form-control" placeholder="Enter your message..." />
+    <div id="icon_select"></div>
     <input id="send" type="button" class="btn btn-default" value="Send" />
 </div>
+<br />
 
 <script>
     document.getElementById("send").addEventListener("click", function () {
@@ -32,4 +34,14 @@
 
     init(@Html.Raw(Json.Encode(Model.PublishKey)), @Html.Raw(Json.Encode(Model.SubscribeKey)), @Html.Raw(Json.Encode(Model.AuthKey)),
     @Html.Raw(Json.Encode(Model.Username)), @Html.Raw(Json.Encode(Model.ChatChannel)), @Html.Raw(Json.Encode(Model.TextToSpeechChannel)));
+
+    var iconSelect = new IconSelect("icon_select");
+
+    var icons = [];
+    icons.push({ 'iconFilePath': '../Content/Images/normal.png', 'iconValue': '' });
+    icons.push({ 'iconFilePath': '../Content/Images/goodnews.png', 'iconValue': 'GoodNews' });
+    icons.push({ 'iconFilePath': '../Content/Images/uncertainty.png', 'iconValue': 'Uncertainty' });
+    icons.push({ 'iconFilePath': '../Content/Images/apology.png', 'iconValue': 'Apology' });
+
+    iconSelect.refresh(icons);
 </script>
