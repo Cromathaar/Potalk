@@ -37,6 +37,12 @@ function addListener() {
 
                 chat.value = chat.value + jsonMessage.Username + ": " + jsonMessage.Message;
             }
+            else if (message.channel === textToSpeechChannel) {
+                if (message.publisher !== username) {
+                    var audio = new Audio(message.message.speech);
+                    audio.play();
+                }
+            }
         },
         presence: function (presenceEvent) {
             if (presenceEvent.channel === chatChannel) {
