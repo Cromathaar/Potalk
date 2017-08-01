@@ -31,3 +31,8 @@ input
     width: 15%;
     height: 300px;
 }
+
+#message {
+    width: 90%;
+    max-width: 90%;
+}

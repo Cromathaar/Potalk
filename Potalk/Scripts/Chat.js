@@ -28,6 +28,7 @@ function addListener() {
             var chat = document.getElementById("chat");
             if (chat.value !== "") {
                 chat.value = chat.value + "\n";
+                chat.scrollTop = chat.scrollHeight;
             }
 
             chat.value = chat.value + jsonMessage.Username + ": " + jsonMessage.Message;
