@@ -23,9 +23,15 @@ namespace Potalk.Helpers
             }
         }
 
-        public static String ChatChannelName {
+        public static String ChatChannel {
             get {
-                return ConfigurationManager.AppSettings["ChatChannelName"];
+                return ConfigurationManager.AppSettings["ChatChannel"];
+            }
+        }
+
+        public static String TextToSpeechChannel {
+            get {
+                return ConfigurationManager.AppSettings["TextToSpeechChannel"];
             }
         }
     }

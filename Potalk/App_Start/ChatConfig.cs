@@ -8,7 +8,7 @@ namespace Potalk
         public static void RegisterChannelAccess()
         {
             var chatManager = new ChatManager();
-            chatManager.ForbidPublicAccessToChannel(ConfigurationHelper.ChatChannelName);
+            chatManager.ForbidPublicAccessToChannel(ConfigurationHelper.ChatChannel);
         }
     }
 }

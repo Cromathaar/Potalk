@@ -1,8 +1,9 @@
 ﻿var pubnub;
-var channel = "chat";
+var chatChannel;
+var textToSpeechChannel;
 var username;
 
-function init(publishKey, subscribeKey, authKey, username) {
+function init(publishKey, subscribeKey, authKey, username, chatChannel, textToSpeechChannel) {
     pubnub = new PubNub({
         publishKey: publishKey,
         subscribeKey: subscribeKey,
@@ -11,6 +12,8 @@ function init(publishKey, subscribeKey, authKey, username) {
     });
 
     this.username = username;
+    this.chatChannel = chatChannel;
+    this.textToSpeechChannel = textToSpeechChannel;
 
     addListener();
     subscribe();
@@ -24,29 +27,33 @@ function addListener() {
             }
         },
         message: function (message) {
-            var jsonMessage = JSON.parse(message.message);
-            var chat = document.getElementById("chat");
-            if (chat.value !== "") {
-                chat.value = chat.value + "\n";
-                chat.scrollTop = chat.scrollHeight;
-            }
+            if (message.channel === chatChannel) {
+                var jsonMessage = JSON.parse(message.message);
+                var chat = document.getElementById("chat");
+                if (chat.value !== "") {
+                    chat.value = chat.value + "\n";
+                    chat.scrollTop = chat.scrollHeight;
+                }
 
-            chat.value = chat.value + jsonMessage.Username + ": " + jsonMessage.Message;
+                chat.value = chat.value + jsonMessage.Username + ": " + jsonMessage.Message;
+            }
         },
         presence: function (presenceEvent) {
-            if (presenceEvent.action === 'join') {
-                if (!UserIsOnTheList(presenceEvent.uuid)) {
-                    AddUserToList(presenceEvent.uuid);
-                }
+            if (presenceEvent.channel === chatChannel) {
+                if (presenceEvent.action === 'join') {
+                    if (!UserIsOnTheList(presenceEvent.uuid)) {
+                        AddUserToList(presenceEvent.uuid);
+                    }
 
-                PutStatusToChat(presenceEvent.uuid, "joins the channel");
-            }
-            else if (presenceEvent.action === 'timeout') {
-                if (UserIsOnTheList(presenceEvent.uuid)) {
-                    RemoveUserFromList(presenceEvent.uuid);
+                    PutStatusToChat(presenceEvent.uuid, "joins the channel");
                 }
+                else if (presenceEvent.action === 'timeout') {
+                    if (UserIsOnTheList(presenceEvent.uuid)) {
+                        RemoveUserFromList(presenceEvent.uuid);
+                    }
 
-                PutStatusToChat(presenceEvent.uuid, "was disconnected due to timeout");
+                    PutStatusToChat(presenceEvent.uuid, "was disconnected due to timeout");
+                }
             }
         }
     });
@@ -54,12 +61,12 @@ function addListener() {
 
 function getOnlineUsers() {
     pubnub.hereNow({
-        channels: [channel],
+        channels: [chatChannel],
         includeUUIDs: true,
         includeState: false
     },
         function (status, response) {
-            var occupants = response.channels[channel].occupants;
+            var occupants = response.channels[chatChannel].occupants;
             for (var i = 0; i < occupants.length; i++) {
                 if (!UserIsOnTheList(occupants[i].uuid)) {
                     AddUserToList(occupants[i].uuid);
@@ -104,7 +111,7 @@ function PutStatusToChat(username, status) {
 
 function subscribe() {
     pubnub.subscribe({
-        channels: [channel],
+        channels: [chatChannel, textToSpeechChannel],
         withPresence: true
     });
 }
@@ -116,8 +123,19 @@ function publish(message) {
     };
 
     var publishConfig = {
-        channel: channel,
+        channel: chatChannel,
         message: JSON.stringify(jsonMessage)
+    };
+
+    pubnub.publish(publishConfig);
+
+    jsonMessage = {
+        "text": message
+    };
+
+    publishConfig = {
+        channel: textToSpeechChannel,
+        message: jsonMessage
     };
 
     pubnub.publish(publishConfig);
