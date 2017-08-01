@@ -135,24 +135,24 @@ function publish(message) {
 
     pubnub.publish(publishConfig);
 
-    var emotionText = '<speak>';
+    var emotedText = '<speak>';
 
     var selectedEmotion = iconSelect.getSelectedValue();
 
     if (selectedEmotion !== "") {
-        emotionText += '<express-as type="' + selectedEmotion + '">';
+        emotedText += '<express-as type="' + selectedEmotion + '">';
     }
 
-    emotionText += message;
+    emotedText += message;
 
     if (selectedEmotion !== "") {
-        emotionText += '</express-as>';
+        emotedText += '</express-as>';
     }
 
-    emotionText += '</speak>';
+    emotedText += '</speak>';
 
     jsonMessage = {
-        "text": emotionText
+        "text": emotedText
     };
 
     publishConfig = {
