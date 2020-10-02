@@ -5,4 +5,4 @@ A demo app utilizing following PubNub services:
 - Presence
 - BLOCKs
 
-It's a simple chat that uses PAM for channel authorization, Presence for detecting a list of online users and IBM Watson Text-to-Speech BLOCK for voicing incoming messages.
+It's a simple chat that uses PAM for channel authorization, Also Presence for detecting a list of online users and IBM Watson Text-to-Speech BLOCK for voicing incoming messages.
